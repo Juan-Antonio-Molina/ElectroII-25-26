@@ -72,9 +72,10 @@ fig_ajuste, ax_ajuste = plt.subplots(figsize=(8, 6))
 ax_ajuste.scatter(inv_dist_cuadrado, E2x, label='Puntos de datos')
 ax_ajuste.plot(inv_dist_cuadrado, y_ajuste, color='red', label='Ajuste Lineal')
 
-ax_ajuste.set_xlabel('1/r^2 [m^-2]')
-ax_ajuste.set_ylabel('E [N m^-1]')
-ax_ajuste.set_title('Ajuste Lineal del campo eléctrico frente a 1/r^2')
+
+ax_ajuste.set_xlabel('$1/r^2$ [$\mathrm{m}^{-2}$]')
+ax_ajuste.set_ylabel('$E$ [$\mathrm{N/C}$]')
+ax_ajuste.set_title('Ajuste Lineal de $E$ frente a $1/r^2$')
 ax_ajuste.legend()
 plt.show()
 
@@ -87,7 +88,7 @@ ax_ajuste.scatter(x2, E2x, label='Puntos de datos')
 ax_ajuste.plot(x2, E2x, color='red', label='funcion')
 
 ax_ajuste.set_xlabel('r [m]')
-ax_ajuste.set_ylabel('E [N m^-1]')
+ax_ajuste.set_ylabel('$E$ [$\mathrm{N/C}$]')
 ax_ajuste.set_title('Comparación del campo eléctrico frente a la distancia')
 ax_ajuste.legend()
 plt.show()

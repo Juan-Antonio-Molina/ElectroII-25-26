@@ -121,18 +121,18 @@ for i in range(len(vec_cargas)):
 niveles=[-50, -10, -5, -1, 0, 1, 5, 10, 50]
 
 # Contornos de dos cargas
-cont1 = ax.contour(X, Y, V, levels=niveles, colors='violet', alpha=0.7)
+cont1 = ax.contour(X, Y, V, levels=niveles, colors='indigo', alpha=0.7)
 ax.clabel(cont1, inline=True, fontsize=8, fmt='%.1f')
 
 # Contornos del dipolo
-cont2 = ax.contour(X, Y, V_dip, levels=niveles, colors='green', alpha=0.7)
+cont2 = ax.contour(X, Y, V_dip, levels=niveles, colors='deeppink', alpha=0.7)
 ax.clabel(cont2, inline=True, fontsize=8, fmt='%.1f')
 
 # Crear artistas falsos para la leyenda
 from matplotlib.lines import Line2D
 legend_elements = [
-    Line2D([0], [0], color='blue', lw=1, label='Dos cargas'),
-    Line2D([0], [0], color='red', lw=1, label='Dipolo'),
+    Line2D([0], [0], color='indigo', lw=1, label='Dos cargas'),
+    Line2D([0], [0], color='deeppink', lw=1, label='Dipolo'),
 ]
 handles, labels = ax.get_legend_handles_labels()
 ax.legend(handles + legend_elements, labels + [e.get_label() for e in legend_elements])
@@ -149,11 +149,11 @@ for i in range(len(vec_cargas)):
   ax.scatter(vec_posiciones[i][0], vec_posiciones[i][1], c=colors[i])
 
 # Flechas de dos cargas
-streamplot1 = ax.streamplot(X, Y, Ex, Ey, color='blue',
+streamplot1 = ax.streamplot(X, Y, Ex, Ey, color='indigo',
                           cmap='viridis', density=1.,
                           linewidth=1, arrowsize=1.2)
 # Flechas del dipolo
-streamplot2 = ax.streamplot(X, Y, Ex_dip, Ey_dip, color='red',
+streamplot2 = ax.streamplot(X, Y, Ex_dip, Ey_dip, color='deeppink',
                           cmap='viridis', density=1.,
                           linewidth=1, arrowsize=1.2)
 # Añadir leyendas
@@ -166,18 +166,51 @@ ax.set_title('Comparación numérica del dipolo puntual')
 ax.set_aspect('equal')
 plt.show()
 
-# Error absoluto máximo (norma infinito)
-err_potencial = np.max(np.abs(V_dip - V))
-print("Error máximo en el potencial V:", err_potencial)
-err_campo_x = np.max(np.abs(Ex_dip - Ex))
-err_campo_y = np.max(np.abs(Ey_dip - Ey))
-print("Error máximo en la componente Ex:", err_campo_x)
-print("Error máximo en la componente Ey:", err_campo_y)
+# Error absoluto (norma infinito)
+e_abs_V = np.abs(V_dip - V)
+e_abs_Ex = np.abs(Ex_dip - Ex)
+e_abs_Ey = np.abs(Ey_dip - Ey)
+e_rel_V = e_abs_V / np.abs(V)
+e_rel_Ex = e_abs_Ex / np.abs(Ex)
+e_rel_Ey = e_abs_Ey / np.abs(Ey)
+
+err_promedio_V = np.mean(e_rel_V)
+err_promedio_V_abs = np.mean(e_abs_V)
+err_promedio_Ex = np.mean(e_rel_Ex)
+err_promedio_Ex_abs = np.mean(e_abs_Ex)
+err_promedio_Ey = np.mean(e_rel_Ey)
+err_promedio_Ey_abs = np.mean(e_abs_Ey)
+
+print('El error promedio (relativo) en V es: ', err_promedio_V)
+print('El error promedio (absoluto) en V es: ', err_promedio_V_abs)
+print('El error promedio (relativo) en la Ex es: ', err_promedio_Ex)
+print('El error promedio (absoluto) en la Ex es: ', err_promedio_Ex_abs)
+print('El error promedio (relativo) en la Ey es: ', err_promedio_Ey)
+print('El error promedio (absoluto) en la Ey es: ', err_promedio_Ey_abs)
 
 
 # -----------------------------------------------------------------------
 #                          NUEVO OBJETIVO
 # -----------------------------------------------------------------------
+fig, ax = plt.subplots(figsize=(8, 8))
+
+# Usamos 'magma' que es muy visual para intensidad, y 'shading='gouraud'' para un mejor suavizado
+shadow_plot = ax.pcolormesh(X, Y, magnitude,
+                            cmap='magma', # Prueba con 'magma' o 'inferno'
+                            shading='gouraud')
+cbar = fig.colorbar(shadow_plot, ax=ax, label='Magnitud del Campo Eléctrico $||\mathbf{E}||$')
+ax.streamplot(X, Y, Ex, Ey, color='gray', density=0.8, linewidth=0.5, arrowsize=0.8)
+
+ax.set_title('Mapa de Magnitud del Campo Eléctrico')
+ax.set_xlabel('Coordenada X [m]')
+ax.set_ylabel('Coordenada Y [m]')
+ax.set_aspect('equal')
+plt.show()
+
+# -----------------------------------------------------------------------
+#                          NUEVO OBJETIVO
+# -----------------------------------------------------------------------
+
 # Para el estudio del comportamiento asintotico tomamos la recta y=x
 x_asin = np.linspace(0.5,5,100)
 y_asin = np.linspace(0.5,5,100)
@@ -210,8 +243,8 @@ fig_ajuste, ax_ajuste = plt.subplots(figsize=(8, 6))
 ax_ajuste.scatter(r_log, V_log, label='Puntos de datos')
 ax_ajuste.plot(r_log, y_ajuste, color='red', label='Ajuste Lineal')
 
-ax_ajuste.set_xlabel('r [m]')
-ax_ajuste.set_ylabel('V [V]')
+ax_ajuste.set_xlabel('log(r)')
+ax_ajuste.set_ylabel('log(V)')
 ax_ajuste.legend()
 ax_ajuste.set_title('Comportamiento asintótico del potencial en logaritmos')
 ax_ajuste.legend()
