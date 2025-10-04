@@ -47,14 +47,18 @@ plt.show()
 
 
 # Encontramos el numero de modos mínimo a lo bruto
-Nx = 200 # Numero de puntos de la particion
+Nx = 500 # Numero de puntos de la particion
+x = np.linspace(0.05*L,0.95*L,Nx)
+y = np.zeros_like(x)
 NumModos = np.arange(1, Nx/2, 2) # M < N/2
 err_rel_V = 1
 contador = 0
+V_teorico = V0*np.ones(Nx)
 
 while err_rel_V > 0.01:
     if contador >= len(NumModos):
         print("No se puede alcanzar ese error relativo para la partición dada")
+        contador = 0
         break
 
     V_numerico = SemiCajaPotencial(NumModos[contador], V0, L, x, y)

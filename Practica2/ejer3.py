@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 
 V0 = 2 # Por ejemplo
-L = 2 # Por ejemplo
+L = 5 # Por ejemplo
 Ny = 50 # Numero de puntos de la particion
 
 NumModos = np.arange(1, Ny/2, 2) # M < N/2
@@ -45,7 +45,7 @@ plt.show()
 tolerancia = V0 * 10**(-2) # PONGO 2 PORQUE CON 3 NO LLEGA KNFKJNDQKJBDQKJNWDKJWFQKJDNQKJD
 for i in range(Ny):
     if V_i[i] < tolerancia:
-        print("La distancia a la que el potencial se vuelve despreciable es ", y[i])
+        print("La distancia a la que el potencial se vuelve despreciable es ", y[i]/L, "L")
         break
 
 
