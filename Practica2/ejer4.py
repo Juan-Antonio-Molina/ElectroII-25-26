@@ -16,8 +16,8 @@ from mpl_toolkits import mplot3d # Contornos de Potencial en 3D
 
 # Sección para definir los puntos que graficaremos
 V0 = 2
-Lx, Ly = 5, 20 # Tamaño a graficar
-Nx, Ny = 50, 100 # N'umero de puntos a graficar
+Lx, Ly = 5, 10 # Tamaño a graficar
+Nx, Ny = 100, 200 # N'umero de puntos a graficar
 x=np.linspace(0, Lx, Nx)
 y=np.linspace(0, Ly, Ny)
 X,Y = np.meshgrid(x,y) # Matriz de puntos
