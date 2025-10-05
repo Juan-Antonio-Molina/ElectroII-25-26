@@ -12,26 +12,36 @@ from em2um import SemiCajaPotencial
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-# Calculamos el ECM usando 50 puntos sobre el conductor.
-# Es decir, calculamos el potencial cuando y=0 y lo comparamos con V0:
-V0 = 2 # Por ejemplo
-L = 2 # Por ejemplo
-Nx = 50 # Numero de puntos de la particion
+# Datos iniciales
+V0 = 2
+L = 2
+Nx = 50 # Número de puntos de la particion
 NumModos = np.arange(1, Nx/2, 2) # M < N/2
 
-# Usamos 50 puntos sin tomar las esquinas, pues estas inducirán un error
-# significativo respecto al valor esperado (V0) al no haber continuidad en el
-# potencial en un entorno de estas.
-
-x = np.linspace(0.05*L, 0.95*L, Nx)
+# Calculamos el ECM usando 50 puntos sobre el conductor.
+x = np.linspace(0.05*L, 0.95*L, Nx)# Usamos 50 puntos sin tomar las esquinas
 y = np.zeros_like(x)
-ECMs = np.zeros_like(NumModos, dtype=float) # sino pongo float el 0.1923310 es 0
+ECMs = np.zeros_like(NumModos, dtype=float) # si no pongo float el 0.1923310 es 0
 V_teorico = V0*np.ones(Nx)
+
+# Graficamos los potenciales a lo largo de la recta y = 0
+cmap = plt.cm.get_cmap('viridis') # paleta de colores jeje
+colores_norm = np.linspace(0, 1, len(NumModos))
+fig, ax = plt.subplots(figsize=(8, 6))
 
 for i in range(len(NumModos)):
     V_numerico = SemiCajaPotencial(NumModos[i], V0, L, x, y)
     ECMs[i] = np.mean((V_numerico - V_teorico)**2)
+    ax.plot(x, V_numerico, color=cmap(colores_norm[i]), label=f'Modo {NumModos[i]}')  # label dinamico
+
+ax.set_xlabel('x [m]')
+ax.set_ylabel('V [V]')
+ax.set_title(r'Potencial a lo largo de la recta $x= 0$ para diferentes modos')
+ax.set_xlim(0.05*L, 0.95*L)
+ax.set_ylim(0, 3)
+ax.legend(title='Número de Modo', loc='best')  # Mejorar la leyenda
+ax.grid(True, linestyle='--')
+plt.show()
 
 # Dibujar los puntos y el ajuste en un nuevo subplot
 fig_ajuste, ax_ajuste = plt.subplots(figsize=(6, 6))
@@ -67,17 +77,6 @@ while err_rel_V > 0.01:
 
 if contador > 0:
     print("El número de modos mínimo es:", NumModos[contador])
-
-
-# Para determinar el número mínimo de modos necesario para obtener
-# un error aceptable, seguiremos el criterio de que el ECM sea menor
-# que N
-
-# Error aceptable cuando error relativo <1%
-
-# Se necesitan más modos para una aproximación mejor porque la serie converge
-# a la solución analítica (exacta)
-
 
 
 
