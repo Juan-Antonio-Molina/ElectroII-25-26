@@ -33,11 +33,12 @@ else:
 
 fig, ax = plt.subplots(figsize=(8, 6))
 ax.plot(y, V1, color="blue", label=f'Puntos de datos')
-ax.plot(y, np.zeros_like(V1), color='red',label=r'$V = 0')
+ax.plot(y, np.zeros_like(V1), color='red',label=r'V = 0')
 
 ax.set_xlabel('y [m]')
 ax.set_ylabel('V [V]')
 ax.set_title(r'Potencial a lo largo de la recta $x= 0$')
+ax.legend()
 ax.grid(True, linestyle='--')
 plt.show()
 
@@ -49,13 +50,12 @@ else:
 
 fig, ax = plt.subplots(figsize=(8, 6))
 ax.plot(y, V2, color="blue", label=f'Puntos de datos')
-ax.plot(y, np.zeros_like(V2), color='red',label=r'$V = 0')
+ax.plot(y, np.zeros_like(V2), color='red',label=r'V = 0')
 
 ax.set_xlabel('y [m]')
 ax.set_ylabel('V [V]')
 ax.set_title(r'Potencial a lo largo de la recta $x= L$')
-#ax.set_xlim(0.05*L, 0.95*L)
-#ax.set_ylim(0, 3)
+ax.legend()
 ax.grid(True, linestyle='--')
 plt.show()
 
@@ -64,7 +64,7 @@ plt.show()
 x3 = np.linspace(0.05 * L, 0.95 * L, Nx)
 y3 = np.zeros_like(x3)
 V3 = SemiCajaPotencial(NumModos, V0, L, x3, y3)
-#V3 = SemiCajaPotencial(50, V0, L, x3, y3)
+V3_2 = SemiCajaPotencial(50, V0, L, x3, y3)
 error = np.abs(V3/V_teo - 1)
 
 if np.max(np.abs(V3/V_teo - 1)) <= 0.01:
@@ -74,13 +74,23 @@ else:
 
 fig, ax = plt.subplots(figsize=(8, 6))
 ax.plot(x3, V3, color="blue", label=f'Puntos de datos')
-ax.plot(x3, V0*np.ones(len(V3)), color='red',label=r'$V = 0')
+ax.plot(x3, V0*np.ones(len(V3)), color='red',label=r'$V = V_0$')
 
 ax.set_xlabel('x [m]')
 ax.set_ylabel('V [V]')
 ax.set_title(r'Potencial a lo largo de la recta $y = 0$')
-#ax.set_xlim(0.05*L, 0.95*L)
-#ax.set_ylim(0, 3)
+ax.legend()
+ax.grid(True, linestyle='--')
+plt.show()
+
+fig, ax = plt.subplots(figsize=(8, 6))
+ax.plot(x3, V3_2, color="blue", label=f'Puntos de datos')
+ax.plot(x3, V0*np.ones(len(V3)), color='red',label=r'$V = V_0$')
+
+ax.set_xlabel('x [m]')
+ax.set_ylabel('V [V]')
+ax.set_title(r'Potencial a lo largo de la recta $y = 0$')
+ax.legend()
 ax.grid(True, linestyle='--')
 plt.show()
 
@@ -105,3 +115,13 @@ ax_ajuste.grid(True, linestyle='--')
 plt.show()
 
 # Desviaciones
+fig, ax = plt.subplots(figsize=(8, 6))
+ax.plot(y4, V4, color="blue", label=f'Puntos de datos')
+ax.plot(y4, np.zeros_like(V4), color='red',label=r'V = 0')
+
+ax.set_xlabel('y [m]')
+ax.set_ylabel('V [V]')
+ax.set_title(r'Potencial a lo largo de la recta $x= L/2$')
+ax.legend()
+ax.grid(True, linestyle='--')
+plt.show()

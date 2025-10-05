@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 
 V0 = 2 # Por ejemplo
-L = 5 # Por ejemplo
+L = 2 # Por ejemplo
 Ny = 50 # Numero de puntos de la particion
 
 NumModos = np.arange(1, Ny/2, 2) # M < N/2
