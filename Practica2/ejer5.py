@@ -43,8 +43,8 @@ sigma_arriba = (-1)*E_0*Ex_arriba
 # Representar graficamente
 # Cara Y=0
 fig, ax = plt.subplots(figsize=(8, 6))
-ax.scatter(x0, sigma0, label='Puntos de datos')
-ax.plot(x0, sigma0, label='funcion')
+ax.scatter(x0, sigma0, label='Valores numéricos')
+ax.plot(x0, sigma0)
 
 ax.set_xlabel('X [m]')
 ax.set_ylabel(r' $\sigma$ [N / C m]')
@@ -55,8 +55,8 @@ plt.show()
 
 # Cara X=0
 fig, ax = plt.subplots(figsize=(8, 6))
-ax.scatter(y_abajo, sigma_abajo, label='Puntos de datos')
-ax.plot(y_abajo, sigma_abajo, label='funcion')
+ax.scatter(y_abajo, sigma_abajo, label='Valores numéricos')
+ax.plot(y_abajo, sigma_abajo)
 
 ax.set_xlabel('Y [m]')
 ax.set_ylabel(r' $\sigma$ [N / C m]')
@@ -67,8 +67,8 @@ plt.show()
 
 # Cara X=L
 fig, ax = plt.subplots(figsize=(8, 6))
-ax.scatter(y_arriba, sigma_arriba, label='Puntos de datos')
-ax.plot(y_arriba, sigma_arriba, label='funcion')
+ax.scatter(y_arriba, sigma_arriba, label='Valores numéricos')
+ax.plot(y_arriba, sigma_arriba)
 
 ax.set_xlabel('Y [m]')
 ax.set_ylabel(r' $\sigma$ [N / C m]')
