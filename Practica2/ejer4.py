@@ -35,7 +35,7 @@ norm_personalizada = Normalize(vmin=vmin_enfocado, vmax=vmax_enfocado)
 fig, ax=plt.subplots()
 Norm = (Ex**2 + Ey**2)**(.5) # norma de E
 strm = ax.streamplot(X, Y, Ex, Ey,
-                     color=Norm,
+                      color=Norm,
                      cmap='viridis',
                      norm=norm_personalizada,
                      density=1.5,
