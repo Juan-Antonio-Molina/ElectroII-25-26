@@ -27,7 +27,9 @@ q1 = 1.0e-9; r1 = [d, 0.0]
 # y otra positiva en el centro geométrico de la
 # esfera para mantener la condición de Q_TOT=0
 # y de V=cte en la superficie de la esfera.
-
+q2 = -q1*a/d
+d2 = a**2/d
+r2 = [d2, 0]
 q3 = -q2; r3 = [0.0, 0.0]
 
 # Las almacenamos
@@ -56,7 +58,38 @@ for i in range(len(vec_cargas)):
   V += potencial_carga(vec_cargas[i], vec_posiciones[i], X, Y)
 
 # Para calcular el potencial en la superficie:
+
+### Dibujamos el potencial
+fig, ax = plt.subplots(figsize=(8, 6))
+# Creamos un círculo para sombrear la región de la esfera.
 theta = np.linspace(0, 2*np.pi, 100) ## Vector de ángulos
+plt.fill(a * np.cos(theta), a * np.sin(theta),
+         color='gray', alpha=0.5, label='Esfera conductora ($V=cte$)')
+plt.plot(a * np.cos(theta), a * np.sin(theta), color='black', linewidth=1)
+
+# Posiciones de las cargas
+plt.plot(r1[0], r1[1], 'ro', markersize=6, label=f'$q_1 = {q1/1e-9:.0f}$ nC',
+         markeredgecolor='black', markerfacecolor='red') # Carga real (positiva, rojo)
+plt.plot(r2[0], r2[1], 'bo', markersize=6, label=f'$q_2 = {q2/1e-9:.2f}$ nC',
+         markeredgecolor='black', markerfacecolor='blue') # Carga imagen (negativa, azul)
+plt.plot(r3[0], r3[1], 'go', markersize=6, label=f'$q_3 = {q3/1e-9:.2f}$ nC',
+         markeredgecolor='black', markerfacecolor='green') # Carga imagen (positiva, verde)
+
+# Líneas equipotenciales
+levels = [0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 10.0]
+contours = ax.contour(X, Y, V, levels=levels, colors='darkcyan',
+                     alpha=0.7)
+ax.clabel(contours, inline=True, fontsize=9, fmt='%1.2f')
+
+# Configuración del gráfico
+plt.title('Líneas equipotenciales del sistema')
+plt.xlabel('X [m]')
+plt.ylabel('Y [m]')
+plt.gca().set_aspect('equal', adjustable='box')
+ax.grid(True, linestyle='--')
+plt.legend(loc='lower left')
+plt.show()
+
 ## Vectores de posiciones, de potencial y de campo:
 x2 = a*np.cos(theta)
 y2 = a*np.sin(theta)
@@ -92,9 +125,91 @@ ax.legend()
 ax.grid(True, linestyle='--')
 plt.show()
 
+### Dibujamos el campo
+fig, ax = plt.subplots(figsize=(8, 6))
+
+# Normalizamos la paleta de colores
+from matplotlib.colors import Normalize
+
+vmin_enfocado = 0.05
+vmax_enfocado = 2
+norm_personalizada = Normalize(vmin=vmin_enfocado, vmax=vmax_enfocado)
+
+# Creamos un círculo para sombrear la región de la esfera.
+plt.fill(a * np.cos(theta), a * np.sin(theta),
+         color='gray', alpha=0.5, label='Esfera conductora ($V=cte$)')
+plt.plot(a * np.cos(theta), a * np.sin(theta), color='black', linewidth=1)
+
+# Posiciones de las cargas
+plt.plot(r1[0], r1[1], 'ro', markersize=6, label=f'$q_1 = {q1/1e-9:.0f}$ nC',
+         markeredgecolor='black', markerfacecolor='red') # Carga real (positiva, rojo)
+plt.plot(r2[0], r2[1], 'bo', markersize=6, label=f'$q_2 = {q2/1e-9:.2f}$ nC',
+         markeredgecolor='black', markerfacecolor='blue') # Carga imagen (negativa, azul)
+plt.plot(r3[0], r3[1], 'go', markersize=6, label=f'$q_3 = {q3/1e-9:.2f}$ nC',
+         markeredgecolor='black', markerfacecolor='green') # Carga imagen (positiva, verde)
+
+# Flechas
+E_magn = np.sqrt(Ex**2 + Ey**2)
+streamplot = ax.streamplot(X, Y, Ex, Ey, color=E_magn, cmap='jet', density=1.5,
+                          norm=norm_personalizada, linewidth=1, arrowsize=1.2)
+
+ax.set_xlabel('X [m]')
+ax.set_ylabel('Y [m]')
+ax.set_title('Campo eléctrico del sistema')
+ax.set_aspect('equal')
+fig.colorbar(streamplot.lines, label='Magnitud de E', norm=norm_personalizada)
+plt.show()
+
+### Normalizamos para ver mejor
+Exn = Ex/E_magn
+Eyn = Ey/E_magn
+
+fig, ax = plt.subplots(figsize=(8, 6))
+
+# Creamos un círculo para sombrear la región de la esfera.
+plt.fill(a * np.cos(theta), a * np.sin(theta),
+         color='gray', alpha=0.5, label='Esfera conductora ($V=0$)')
+plt.plot(a * np.cos(theta), a * np.sin(theta), color='black', linewidth=1)
+
+# Posiciones de las cargas
+plt.plot(r1[0], r1[1], 'ro', markersize=6, label=f'$q_1 = {q1/1e-9:.0f}$ nC',
+         markeredgecolor='black', markerfacecolor='red') # Carga real (positiva, rojo)
+plt.plot(r2[0], r2[1], 'bo', markersize=6, label=f'$q_2 = {q2/1e-9:.2f}$ nC',
+         markeredgecolor='black', markerfacecolor='blue') # Carga imagen (negativa, azul)
+plt.plot(r3[0], r3[1], 'go', markersize=6, label=f'$q_3 = {q3/1e-9:.2f}$ nC',
+         markeredgecolor='black', markerfacecolor='green') # Carga imagen (positiva, verde)
+
+# Usamos 'slice' para tomar solo 1 de cada 5 puntos en X y 1 de cada 5 en Y
+skip = (slice(None, None, 5), slice(None, None, 5))
+quiver_plot = ax.quiver(X[skip], Y[skip], Exn[skip], Eyn[skip], E_magn[skip],
+                        cmap='jet', pivot='mid', scale=40, headlength=4, norm=norm_personalizada)
+
+ax.set_xlabel('Y [m]')
+ax.set_ylabel('X [m]')
+ax.set_title('Vectores de campo eléctrico normalizados')
+ax.set_aspect('equal')
+fig.colorbar(quiver_plot, ax=ax, label='Magnitud de E', norm=norm_personalizada)
+plt.show()
+
 # Calculamos la densidad de carga superficial en función
 # del ángulo y la comparamos con la obtenida
 # en el ejercicio1.
+
+e_0 = 8.8541878188e-12  # permitividad vacio
+sigma = e_0*E_normal_super
+
+# Hacemos un pequeño plot
+fig, ax = plt.subplots(figsize=(6, 6))
+ax.scatter(theta, sigma, label = 'Puntos datos')
+ax.plot(theta, sigma, color='darkcyan')
+
+ax.set_xlabel(r'$\theta$ [rad]')
+ax.set_ylabel(r'$\sigma$ [C/$m^2$]')
+ax.set_title('Densidad superficial de la esfera')
+ax.legend()
+ax.grid(True, linestyle='--')
+plt.show()
+
 
 # Finalmente, calculamos la carga total inducida
 # en la esfera mediante la integración de la densidad
