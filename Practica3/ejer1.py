@@ -1,7 +1,6 @@
 """
 ejer1.py - Ejercicio 1: Carga puntual y esfera conductora a tierra
 
-Created on Fri Sept 19 22:07:51 2025
 @autors: juanan, manuelpi
 """
 
