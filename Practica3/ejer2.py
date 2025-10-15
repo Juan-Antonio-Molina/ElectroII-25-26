@@ -15,6 +15,8 @@ a = 1.0
 d = 3.0
 q1 = 1.0e-9; r1 = [d, 0.0]
 
+e_0 = 8.8541878188e-12  # permitividad vacio
+
 # Esta vez, la esfera no estará a tierra,
 # pero al ser conductora, su superficie
 # será una equipotencial.
@@ -104,6 +106,27 @@ for i in range(len(vec_cargas)):
   Ey_super += Ey_i
   V_super += potencial_carga(vec_cargas[i], vec_posiciones[i], x2, y2)
 
+# Dibujamos el error del potencial
+fig, ax = plt.subplots(figsize=(8, 6))
+ax.scatter(theta, V_super, label='Puntos de datos')
+ax.plot(theta, V_super, color='darkcyan')
+
+ax.set_xlabel(r'$\theta$ [rad]')
+ax.set_ylabel(r'V [V]')
+ax.set_title('Potencial en la superficie de la esfera')
+ax.legend()
+ax.grid(True, linestyle='--')
+plt.show()
+
+
+V_teo_sup = q3/(4*np.pi*e_0*a)
+V_teo_sups = [V_teo_sup]*len(V_super)
+# Vamos a comparar el potencial calculado con el teórico:
+errs_rel_Vsup = np.abs((V_teo_sups - V_super)/V_teo_sups)
+err_rel_Vsup_max = np.max(errs_rel_Vsup)
+print(err_rel_Vsup_max," es el máximo error relativo del potencial en la superficie")
+print(V_teo_sup)
+
 # Calculamos y visualizamos también el campo eléctrico,
 # verificamos que es perpendicular a la superficie
 # de la esfera, y calculamos su valor en r=[a/2,a/2]
@@ -191,11 +214,17 @@ ax.set_aspect('equal')
 fig.colorbar(quiver_plot, ax=ax, label='Magnitud de E', norm=norm_personalizada)
 plt.show()
 
+# Ahora vamos a calcular el valor del campo eléctrico
+# en la posición r=(a/2,a/2):
+Ex_punto, Ey_punto = 0, 0
+Ex_punto, Ey_punto = campo_carga(vec_cargas[i], vec_posiciones[i], a/2, a/2)
+print("El valor del campo eléctrico en el punto (a/2,a/2) es: (", Ex_punto,", ", Ey_punto,") N/C")
+
+
 # Calculamos la densidad de carga superficial en función
 # del ángulo y la comparamos con la obtenida
 # en el ejercicio1.
 
-e_0 = 8.8541878188e-12  # permitividad vacio
 sigma = e_0*E_normal_super
 
 # Hacemos un pequeño plot
@@ -214,3 +243,7 @@ plt.show()
 # Finalmente, calculamos la carga total inducida
 # en la esfera mediante la integración de la densidad
 # de carga a lo largo de su superficie.
+theta = theta[:50] # cambiar en funcion de la particion de theta
+sigma = sigma[:50]
+carga_superficie = a**2 * 2 * np.pi * (theta[1] - theta[0]) * sum(sigma * np.sin(theta))
+print(f'El valor de la integración de sigma a lo largo de la superficie es {carga_superficie:}')
