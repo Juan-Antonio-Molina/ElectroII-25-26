@@ -243,6 +243,8 @@ plt.show()
 # Finalmente, calculamos la carga total inducida
 # en la esfera mediante la integración de la densidad
 # de carga a lo largo de su superficie.
+
+print(q3/(np.pi*4*e_0*a))
 theta = theta[:50] # cambiar en funcion de la particion de theta
 sigma = sigma[:50]
 carga_superficie = a**2 * 2 * np.pi * (theta[1] - theta[0]) * sum(sigma * np.sin(theta))
