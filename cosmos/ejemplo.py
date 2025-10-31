@@ -1,4 +1,4 @@
-from sympy import symbols, Matrix, sin
+from sympy import symbols, Matrix, sin, diag, Rational, Integer
 from tensores_importantes import christoffel_symbols, riemann_tensor, ricci_tensor, ricci_scalar, pretty_print_tensors
 
 # Ejemplo 21.10 del Hartle
