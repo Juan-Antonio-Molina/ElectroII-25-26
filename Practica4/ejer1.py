@@ -8,6 +8,7 @@ Adaptado de García Olmedo 2006 (Ap'endice B: Secci'on B1.3.2)
 """
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy import stats
 
 
 def Pot(V0, V1, V2, V3, V4, R):
@@ -78,7 +79,7 @@ for i in np.arange(Nint):
         for jt in np.arange(1, m):
             V[it, jt], R[i] = Pot(V[it, jt], V[it + 1, jt], V[it - 1, jt], V[it, jt + 1], V[it, jt - 1], R[i])
 
-    # Secci'on interior x=(1, ..., N - 1); y = m
+    # Secci'on interior x=(l+1, ..., N - 1); y = m
     for it in np.arange(l+1, N):
         V[it, m], R[i] = Pot(V[it, m], V[it + 1, m], V[it - 1, m], V[it, m + 1], V[it, m - 1], R[i])
 
@@ -144,6 +145,14 @@ p2.set_xlabel('Número de Iteración')
 p2.set_ylabel('Residuo Acumulado (Escala logarítmica)')
 p2.grid(True, which="both", ls="--", alpha=0.6) # Añadir rejilla
 p2.legend()
-
 plt.show()
 
+# EJERCICIO 2
+N_ajuste = np.arange(200,1000)
+R_ajuste = np.log(R[200:])
+res = stats.linregress(N_ajuste, R_ajuste) # Ajuste lineal
+print(f"Pendiente = {res.slope:.3f} err: {res.stderr:.3f}")
+print(f"Interseccion = {res.intercept:.3f} err: {res.
+      intercept_stderr:.3f}")
+print(f"Coef. correlación Pearson r = {res.rvalue:.3f}")
+print(f"R^2 (calidad ajuste) = {res.rvalue**2:.3f}")
