@@ -156,3 +156,129 @@ print(f"Interseccion = {res.intercept:.3f} err: {res.
       intercept_stderr:.3f}")
 print(f"Coef. correlación Pearson r = {res.rvalue:.3f}")
 print(f"R^2 (calidad ajuste) = {res.rvalue**2:.3f}")
+
+# EJERCICIO 3
+### Dibujamos el potencial
+fig, ax3 = plt.subplots(figsize=(8, 6))
+
+# Líneas equipotenciales
+levels = [0, 0.05, 0.1, 0.15, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.0]
+contours = ax3.contour(X, Y, np.transpose(V), levels=levels, colors='darkcyan',
+                     alpha=0.7)
+ax3.clabel(contours, inline=True, fontsize=9, fmt='%1.2f')
+# El campo eléctrico:
+ax3.streamplot(X, Y, np.transpose(Ex), np.transpose(Ey),
+               density=1.2, linewidth=0.8, color='k', arrowsize=0.8)
+
+# Dibujamos el electrodo
+xelec = np.array([0, delta * l])
+yelec = delta * m * np.array([1,1])
+ax3.plot(xelec, yelec, color='r', linewidth=3, solid_capstyle='butt', label='Electrodo')
+ax3.legend()
+
+# Configuración del gráfico
+plt.title('Líneas equipotenciales del sistema y campo eléctrico')
+plt.xlabel('X [m]')
+plt.ylabel('Y [m]')
+plt.gca().set_aspect('equal', adjustable='box')
+ax3.grid(True, linestyle='--')
+plt.legend(loc='lower right')
+plt.show()
+
+## Comprobamos las condiciones de contorno
+# Dirichlet1:
+Velec = V[0:l+1, m] # Es el potencial en el electrodo
+Xelec = x[0:l+1]
+fig, ax4 = plt.subplots(figsize=(8, 6))
+ax4.scatter(Xelec, Velec, label='Puntos de datos')
+ax4.plot(Xelec, Velec, color='darkcyan')
+
+ax4.set_xlabel(r'X [m]')
+ax4.set_ylabel(r'V [V]')
+ax4.set_title('Potencial en el electrodo')
+ax4.legend()
+ax4.grid(True, linestyle='--')
+plt.show()
+
+err_d1 =np.abs(Velec-1)
+max_err_d1 = err_d1.max()
+print(f"El máximo de los errores en el electrodo es Err1= {max_err_d1}")
+
+# Dirichlet2:
+Vinf = V[0:N+1, 0] # Es el potencial en el contorno inferior
+fig, ax5 = plt.subplots(figsize=(8, 6))
+ax5.scatter(x, Vinf, label='Puntos de datos')
+ax5.plot(x, Vinf, color='darkcyan')
+
+ax5.set_xlabel(r'X [m]')
+ax5.set_ylabel(r'V [V]')
+ax5.set_title('Potencial en el contorno inferior')
+ax5.legend()
+ax5.grid(True, linestyle='--')
+plt.show()
+
+err_d2 =np.abs(Vinf)
+max_err_d2 = err_d2.max()
+print(f"El máximo de los errores en el contorno inferior es Err2= {max_err_d2}")
+
+# Neumann1:
+# Vamos a calcular la máxima diferencia entre V1,j y V0,j para todo j:
+V0j = V[0, 1:N+1]
+V1j = V[1, 1:N+1]
+difs1 = np.abs((V0j - V1j)/V0j)
+max_difs1 = difs1.max()
+print(f"La máxima de las diferencias en el contorno izquierdo es Difs1= {max_difs1}")
+
+# Neumann2:
+# Vamos a calcular la máxima diferencia entre Vi,N-1 y Vi,N para todo i:
+ViN_1 = V[0:N+1, N-1]
+ViN = V[0:N+1, N]
+difs2 = np.abs((ViN_1 - ViN)/ViN)
+max_difs2 = difs2.max()
+print(f"La máxima de las diferencias en el contorno superior es Difs2= {max_difs2}")
+
+# Neumann3:
+# Vamos a calcular la máxima diferencia entre VN-1,j y VN,j para todo j:
+VNj = V[N, 1:N+1]
+VN_1j = V[N-1, 1:N+1]
+difs3 = np.abs((VNj - VN_1j)/VNj)
+max_difs3 = difs3.max()
+print(f"La máxima de las diferencias en el contorno derecho es Difs3= {max_difs3}")
+
+# Comparación con condensador infinito:
+
+### Dibujamos el potencial
+fig, ax6 = plt.subplots(figsize=(8, 6))
+
+x_cerca = x[0:l+1]
+y_cerca = y[0:m+1]
+Xcerca, Ycerca = np.meshgrid(x_cerca, y_cerca)
+V_cerca = V[0:l+1,0:m+1]
+Ex_cerca = Ex[0:l+1,0:m+1]
+Ey_cerca = Ey[0:l+1,0:m+1]
+
+# Líneas equipotenciales
+levels = [0, 0.05, 0.1, 0.15, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.0]
+contours = ax6.contour(Xcerca, Ycerca, np.transpose(V_cerca), levels=levels, colors='darkcyan',
+                     alpha=0.7)
+ax6.clabel(contours, inline=True, fontsize=9, fmt='%1.2f')
+# El campo eléctrico:
+ax6.streamplot(Xcerca, Ycerca, np.transpose(Ex_cerca), np.transpose(Ey_cerca),
+               density=1.2, linewidth=0.8, color='k', arrowsize=0.8)
+
+# Dibujamos el electrodo
+xelec = np.array([0, delta * l])
+yelec = delta * m * np.array([1,1])
+ax6.plot(xelec, yelec, color='r', linewidth=3, solid_capstyle='butt', label='Electrodo')
+ax6.legend()
+
+# Configuración del gráfico
+plt.title('Líneas equipotenciales del sistema y campo eléctrico')
+plt.xlabel('X [m]')
+plt.ylabel('Y [m]')
+plt.gca().set_aspect('equal', adjustable='box')
+ax6.grid(True, linestyle='--')
+plt.legend(loc='lower right')
+plt.show()
+
+
