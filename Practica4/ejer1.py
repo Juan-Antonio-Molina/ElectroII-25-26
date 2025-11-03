@@ -132,8 +132,8 @@ ax1.plot(xelec, yelec, color='r', linewidth=3, solid_capstyle='butt', label='Ele
 ax1.legend()
 
 ax1.set_title('Distribución de Potencial y Campo Eléctrico')
-ax1.set_xlabel('Posición x (m)')
-ax1.set_ylabel('Posición y (m)')
+ax1.set_xlabel('X [m]')
+ax1.set_ylabel('Y [m]')
 ax1.set_aspect('equal')
 plt.show()
 
