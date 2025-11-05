@@ -121,4 +121,4 @@ print("\n--- Resultados de la Simulación ---")
 print(f"Factor Courant máximo (Vacío): {np.sqrt(A_array[0]):.4f}")
 print(f"Factor Courant en Dieléctrico (er=4): {np.sqrt(A_array[Nz]):.4f}")
 print(
-    "¡Observa cómo aaala onda se refleja parcialmente en la interfaz y la longitud de onda se acorta al entrar al dieléctrico!")
+    "¡Observa cómo la onda se refleja parcialmente en la interfaz y la longitud de onda se acorta al entrar al dieléctrico!")
