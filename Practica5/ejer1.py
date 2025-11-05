@@ -68,3 +68,4 @@ for j in range(Nt + 1):
     plt.pause(0.03)  # ~30 ms por frame
 
 plt.show()  # Muestra
+# OJALA LAS ARDILLAS SEAN FEMBOYS
