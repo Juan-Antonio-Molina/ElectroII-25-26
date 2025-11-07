@@ -49,10 +49,7 @@ Fo = 1
 # aunque típicamente la fuente se aplica en F[0, j+1].
 # Basándome en la línea 32 y 33, reinterpreto la inicialización de la fuente:
 
-# F[0, 1] (Estimado, la línea 30 es confusa)
 F[0, 1] = Fo * np.sin(-w * 1 * dt)  # Usando 1*dt para el primer paso de tiempo
-t = np.arange(0, Nt * dt, dt)  # Vector de tiempo
-# F[0, j] (Condición de contorno de la fuente)
 for j in np.arange(1, Nt):  # Rango de 1 a Nt para los pasos de tiempo
     F[0, j+1] = Fo * np.sin(-w * j * dt)
     F_teo[0, j+1] = Fo * np.sin(-w*j*dt)
