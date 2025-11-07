@@ -101,24 +101,7 @@ ax.grid(True, linestyle='--', alpha=0.6)
 ax.axvline(x=L_int, color='r', linestyle='--', label='Interfaz Dieléctrica (z=10)')
 ax.legend(loc='lower left')
 
-
-# Función de actualización para la animación
-def animate(j):
-    """Actualiza la gráfica para el paso de tiempo j."""
-    line.set_ydata(F[:, j])
-    ax.set_title(f"Propagación de Onda en Interfaz Dieléctrica | t={j * dt:.4f} s | Paso={j}/{Nt}")
-    return line,
-
-
-# Crear la animación
-# Reducimos los frames para que sea más rápida y visible
-frames_to_show = np.arange(0, Nt, 10)
-ani = FuncAnimation(fig, animate, frames=frames_to_show, interval=50, blit=True)
-
-plt.show()
-
-print("\n--- Resultados de la Simulación ---")
-print(f"Factor Courant máximo (Vacío): {np.sqrt(A_array[0]):.4f}")
-print(f"Factor Courant en Dieléctrico (er=4): {np.sqrt(A_array[Nz]):.4f}")
-print(
-    "¡Observa cómo la onda se refleja parcialmente en la interfaz y la longitud de onda se acorta al entrar al dieléctrico!")
+for j in range(Nt):
+    ax.set_title(f't = {j*dt:.4f} s')
+    line.set_ydata(F[:, j + 1])
+    plt.pause(0.003)

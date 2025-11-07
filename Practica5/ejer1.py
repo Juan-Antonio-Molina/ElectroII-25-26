@@ -57,10 +57,15 @@ for j in np.arange(1, Nt):
 # Bloque de animacion
 from matplotlib.animation import FuncAnimation
 
-fig, ax = plt.subplots(figsize=(6, 3))
-line, = ax.plot(z, F[:, 0], lw=2)  # Inicializa la línea con el tiempo j=0
-line2, = ax.plot(z, F_teo[:, 0], 'r:', lw=2)
+fig, ax = plt.subplots(figsize=(10, 5))
+line, = ax.plot(z, F[:, 0], lw=2, label='Numérica')  # Inicializa la línea con el tiempo j=0
+line2, = ax.plot(z, F_teo[:, 0], 'r:', lw=2, label='Analítica')
 ax.set_xlim(0, L), ax.set_ylim(-1.5, 1.5), ax.set_xlabel('z'), ax.set_ylabel('F')
+ax.set_xlabel('Posición z [unidades]'), ax.set_ylabel('Amplitud F(z, t)')
+ax.set_title('Propagación de Onda en el vacio')
+ax.grid(True, linestyle='--', alpha=0.6)
+ax.legend(loc='lower left')
+
 
 for j in range(Nt + 1):
     # Actualiza los datos de la línea con la columna de tiempo 'j' de la matriz F
@@ -74,7 +79,7 @@ for j in range(Nt + 1):
 plt.show()
 
 # Dibujamos tres periodo
-fig, ax = plt.subplots(figsize=(6, 3))
+fig, ax = plt.subplots(figsize=(10, 5))
 j_T = int(3*T/dt)
 ax.plot(z, F[:, j_T], color='darkslategray',label='Numérica')
 ax.plot(z, F_teo[:, j_T], 'r:', label = "Analítica")
@@ -87,7 +92,7 @@ plt.show()
 
 
 # Comprobacion excitacion inicial
-fig, ax = plt.subplots(figsize=(6, 3))
+fig, ax = plt.subplots(figsize=(10, 5))
 j_landa = 0
 t = np.arange(0,(Nt+1)*dt,dt)
 ax.plot(t, F[j_landa, :], color='darkslategray',label='Numérica')

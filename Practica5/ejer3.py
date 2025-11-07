@@ -65,10 +65,15 @@ for j in np.arange(1, Nt):  # Rango de 1 a Nt para los pasos de tiempo
     F[Nz, j + 1] = F[Nz - 1, j] * (r - 1) / (r + 1)*(F[Nz -1, j+1] - F[Nz , j])
 
 # --- Bloque de Visualización (Animación) ---
-fig, ax = plt.subplots(figsize=(6, 3))
-line, = ax.plot(z, F[:, 0], lw=2)  # Inicializa la línea con el tiempo j=0
-line2, = ax.plot(z, F_teo[:, 0], 'r:', lw=2)
+fig, ax = plt.subplots(figsize=(10, 5))
+line, = ax.plot(z, F[:, 0], lw=2, label='Numérica')  # Inicializa la línea con el tiempo j=0
+line2, = ax.plot(z, F_teo[:, 0], 'r:', lw=2, label='Analítica')
 ax.set_xlim(0, L), ax.set_ylim(-1.5, 1.5), ax.set_xlabel('z'), ax.set_ylabel('F')
+ax.set_xlabel('Posición z [unidades]'), ax.set_ylabel('Amplitud F(z, t)')
+ax.set_title('Propagación de Onda en el medio conductor')
+ax.grid(True, linestyle='--', alpha=0.6)
+ax.legend(loc='best')
+
 for j in range(Nt + 1):
     # Actualiza los datos de la línea con la columna de tiempo 'j' de la matriz F
     line.set_ydata(F[:, j])
@@ -79,7 +84,7 @@ for j in range(Nt + 1):
 plt.show()
 
 # Ejercicio 8, dibujamos para t = T. Como T = j_T * dt..
-fig, ax = plt.subplots(figsize=(6, 3))
+fig, ax = plt.subplots(figsize=(10, 5))
 j_T = int(T/dt)
 ax.plot(z, F[:, j_T], color='darkslategray',label='Numérica')
 ax.plot(z, F_teo[:, j_T], 'r:', label = "Analítica")
@@ -92,7 +97,7 @@ plt.show()
 
 
 # Ejercicio 9, dibujamos para z = landa/2. Como landa = i_landa * dz..
-fig, ax = plt.subplots(figsize=(6, 3))
+fig, ax = plt.subplots(figsize=(10, 5))
 j_landa = int(landa/(2*dz))
 t = np.arange(0,(Nt+1)*dt,dt)
 ax.plot(t, F[j_landa, :], color='darkslategray',label='Numérica')
