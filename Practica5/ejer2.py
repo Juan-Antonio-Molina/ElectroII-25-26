@@ -101,10 +101,10 @@ for j in np.arange(1, Nt):
     if np.abs(F[Nz, j]) > tol:
         t_derecha.append(j)
 
-    if np.abs(F[2,j]-amplitud)<tol_amp:
+    if np.abs(F[2,j]+amplitud)<tol_amp:
         t_amplitud.append(dt * j)
 
-    if np.abs(F[i_int+2,j]-amplitud_diel)<tol_amp:
+    if np.abs(F[i_int+2,j]+amplitud_diel)<tol_amp:
         t_amplitud_diel.append(dt * j)
 
 
