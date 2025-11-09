@@ -45,6 +45,15 @@ T_periodo = 2 * pi / w_inc  # Periodo en el vacío
 F = np.zeros([Nz + 1, Nt + 1])  # F es Psi (función de onda)
 F0 = 1  # Amplitud de la onda de excitación
 
+
+# Vamos a hacer lo análogo para el vector de Poynting:
+
+# --- Inicialización ---
+S = np.zeros([Nz + 1, Nt + 1])  # S es el vector de Poynting
+S0 = 1  # Amplitud de la onda de excitación
+eta = 1/2
+
+
 # --- Parámetros del esquema por posición ---
 # Array A(i) = (v(i) * dt / dz)^2
 A_array = (v_array * dt / dz) ** 2
@@ -62,12 +71,14 @@ tol_amp = 0.01
 # Inicialización de los dos primeros pasos de tiempo (requerido por el esquema)
 for j in np.arange(0, 2):
     F[0, j] = F0 * np.sin(-w_inc * j * dt)  # Excitación en z=0
+    S[0,j] = (F[0,j])**2 / eta
     # No se propaga onda en el primer paso (F[i, 0] = 0)
 
 # Propagación principal (pasos de tiempo j=1 hasta Nt-1)
 for j in np.arange(1, Nt):
     # Condición de excitación (fuente) en z=0
     F[0, j + 1] = F0 * np.sin(-w_inc * j * dt)
+    S[0, j+1] = (F[0, j+1]) ** 2 / eta
 
     v_abc = v_array[1]
     r_abc = v_abc * dt / dz
@@ -76,6 +87,7 @@ for j in np.arange(1, Nt):
     for i in np.arange(1, i_int):
         A_i = A_array[i]  # Usamos el factor A local
         F[i, j + 1] = A_i * (F[i + 1, j] + F[i - 1, j]) + 2 * (1 - A_i) * F[i, j] - F[i, j - 1]
+        S[i, j + 1] = (F[i, j + 1]) ** 2 / eta
 
     #F[i_int, j + 1] = F[i_int - 1, j] + (r_abc - 1) / (r_abc + 1) * (F[i_int - 1, j + 1] - F[i_int, j])
 
@@ -85,6 +97,7 @@ for j in np.arange(1, Nt):
     for i in np.arange(i_int, Nz):
         A_i = A_array[i]  # Usamos el factor A local
         F[i, j + 1] = A_i * (F[i + 1, j] + F[i - 1, j]) + 2 * (1 - A_i) * F[i, j] - F[i, j - 1]
+        S[i, j + 1] = (F[i, j + 1]) ** 2 / eta
 
     # Condición de Contorno Absorbente (ABC) de primer orden en z=L
     # Se utiliza la velocidad del último punto (la del dieléctrico)
@@ -96,6 +109,8 @@ for j in np.arange(1, Nt):
 
     # Simple primer orden Mur:
     F[Nz, j + 1] = F[Nz - 1, j] + (r_abc - 1) / (r_abc + 1) * (F[Nz - 1, j + 1] - F[Nz, j])
+    S[Nz, j + 1] = (F[Nz, j + 1]) ** 2 / eta
+
     if np.abs(F[i_int, j]) >tol:
         t_interfaz.append(j)
     if np.abs(F[Nz, j]) > tol:
@@ -175,3 +190,20 @@ for j in range(Nt):
     ax.set_title(f't = {j*dt:.4f} s')
     line.set_ydata(F[:, j + 1])
     plt.pause(0.003)
+
+
+# Configuración de la figura y los ejes
+fig, ax = plt.subplots(figsize=(10, 5))
+line, = ax.plot(z, S[:, 0], 'b-', lw=2, label='Solución Numérica (Poynting)')
+ax.set_xlim(0, L), ax.set_ylim(-5, 5),
+ax.set_xlabel('Posición z [unidades]'), ax.set_ylabel('Amplitud S(z, t)')
+ax.set_title('Vector de Poynting en Interfaz Dieléctrica ($\\epsilon_r$: 1 $\\to$ 4)')
+ax.grid(True, linestyle='--', alpha=0.6)
+ax.axvline(x=L_int, color='r', linestyle='--', label='Interfaz Dieléctrica (z=10)')
+ax.legend(loc='lower left')
+
+for j in range(Nt):
+    ax.set_title(f't = {j*dt:.4f} s')
+    line.set_ydata(S[:, j + 1])
+    plt.pause(0.003)
+
