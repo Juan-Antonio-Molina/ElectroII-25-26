@@ -140,8 +140,8 @@ print(f"La velocidad de propagación en el dieléctrico es v={velocidad_diel:.2f
 # en las que se alcanza dicha amplitud:
 # Tomaremos el primer valor del periodo que obtengamos, pues después
 # se ven involucrados los efectos de reflexión y transmisión.
-periodo_exp = t_amplitud[2]-t_amplitud[0]
-periodo_diel_exp = t_amplitud_diel[2]-t_amplitud_diel[0]
+periodo_exp = t_amplitud[1]-t_amplitud[0]
+periodo_diel_exp = t_amplitud_diel[1]-t_amplitud_diel[0]
 print(f"El periodo de nuestra onda en el vacío es T={periodo_exp:.2f}")
 print(f"El periodo de nuestra onda en el dieléctrico es T={periodo_diel_exp:.2f}")
 
