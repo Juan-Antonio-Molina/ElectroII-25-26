@@ -186,10 +186,10 @@ from matplotlib.animation import FuncAnimation
 fig, ax = plt.subplots(figsize=(10, 5))
 line, = ax.plot(z, F[:, 0], 'b-', lw=2, label='Solución Numérica')
 ax.set_xlim(0, L), ax.set_ylim(-1.5, 1.5),
-ax.set_xlabel('Posición z [unidades]'), ax.set_ylabel('Amplitud F(z, t)')
+ax.set_xlabel('Posición z [m]'), ax.set_ylabel('Amplitud F(z, t)')
 ax.set_title('Propagación de Onda en Interfaz Dieléctrica ($\\epsilon_r$: 1 $\\to$ 4)')
 ax.grid(True, linestyle='--', alpha=0.6)
-ax.axvline(x=L_int, color='r', linestyle='--', label='Interfaz Dieléctrica (z=10)')
+ax.axvline(x=L_int, color='r', linestyle='--', label='Interfaz Dieléctrica (z=15)')
 ax.legend(loc='lower left')
 
 for j in range(Nt):
@@ -202,10 +202,10 @@ for j in range(Nt):
 fig, ax = plt.subplots(figsize=(10, 5))
 line, = ax.plot(z, S[:, 0], 'b-', lw=2, label='Solución Numérica (Poynting)')
 ax.set_xlim(0, L), ax.set_ylim(-5, 5),
-ax.set_xlabel('Posición z [unidades]'), ax.set_ylabel('Amplitud S(z, t)')
+ax.set_xlabel('Posición z [m]'), ax.set_ylabel('Amplitud S(z, t)')
 ax.set_title('Vector de Poynting en Interfaz Dieléctrica ($\\epsilon_r$: 1 $\\to$ 4)')
 ax.grid(True, linestyle='--', alpha=0.6)
-ax.axvline(x=L_int, color='r', linestyle='--', label='Interfaz Dieléctrica (z=10)')
+ax.axvline(x=L_int, color='r', linestyle='--', label='Interfaz Dieléctrica (z=15)')
 ax.legend(loc='lower left')
 
 for j in range(Nt):
