@@ -6,7 +6,7 @@ pi = np.pi
 mur = 1  # mu_r constante en todo el dominio
 
 # --- Discretización espacial ---
-L = 20
+L = 30
 Nz = 300
 z = np.linspace(0, L, Nz + 1)
 dz = z[1] - z[0]
@@ -30,16 +30,23 @@ eps_r_array[i_int + 1:] = epr2  # El dieléctrico comienza en el índice i_int +
 v_array = 1 / np.sqrt(eps_r_array * mur)
 
 # Parámetros de la onda incidente (definidos en el vacío)
-loon = L / 3
-k = 2 * pi / loon
-w_inc = v_array[0] * k  # Frecuencia angular en el vacío
+#loon = L / 3
+#k = 2 * pi / loon
+#w_inc = v_array[0] * k  # Frecuencia angular en el vacío
 
 # --- Discretización temporal ---
 # Usamos la velocidad máxima (la del vacío, v=1) para garantizar la estabilidad
 v_max = v_array.max()
 dt = 0.99 * dz / v_max
 Nt = 2 * Nz
-T_periodo = 2 * pi / w_inc  # Periodo en el vacío
+#T_periodo = 2 * pi / w_inc  # Periodo en el vacío
+
+# Fijamos el periodo en 10s
+T_periodo = 10
+w_inc = 2*pi/T_periodo
+k = w_inc/v_array[0]
+loon = 2*pi/k
+
 
 # --- Inicialización ---
 F = np.zeros([Nz + 1, Nt + 1])  # F es Psi (función de onda)
