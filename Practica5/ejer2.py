@@ -198,7 +198,7 @@ ax.legend(loc='lower left')
 
 # Configuración de la figura y los ejes
 fig, ax = plt.subplots(figsize=(10, 5))
-line, = ax.plot(t, onda_periodo_vac, 'b-', lw=2, label='Solución Numérica')
+line, = ax.plot(t, onda_periodo_diel, 'g-', lw=2, label='Solución Numérica')
 ax.set_ylim(-1.5, 1.5),
 ax.set_xlabel('Tiempo t [s]'), ax.set_ylabel('Amplitud F(t)')
 ax.set_title('Propagación de Onda en el dieléctrico (z fijo, $\ \epsilon_r $=4)')
