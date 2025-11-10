@@ -193,7 +193,7 @@ ax.axvline(x=L_int, color='r', linestyle='--', label='Interfaz Dieléctrica (z=1
 ax.legend(loc='lower left')
 
 for j in range(Nt):
-    ax.set_title(f't = {j*dt:.4f} s')
+    ax.set_title(f'Propagación de la onda en t = {j*dt:.4f} s')
     line.set_ydata(F[:, j + 1])
     plt.pause(0.003)
 
@@ -209,7 +209,7 @@ ax.axvline(x=L_int, color='r', linestyle='--', label='Interfaz Dieléctrica (z=1
 ax.legend(loc='lower left')
 
 for j in range(Nt):
-    ax.set_title(f't = {j*dt:.4f} s')
+    ax.set_title(f'Propagación del vector de Poynting en t = {j*dt:.4f} s')
     line.set_ydata(S[:, j + 1])
     plt.pause(0.003)
 
