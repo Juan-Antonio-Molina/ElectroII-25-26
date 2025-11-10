@@ -48,6 +48,9 @@ k = w_inc/v_array[0]
 loon = 2*pi/k
 
 # --- Inicialización ---
+t=np.linspace(0,Nt*dt,Nt+1)
+
+
 F = np.zeros([Nz + 1, Nt + 1])  # F es Psi (función de onda)
 F0 = 1  # Amplitud de la onda de excitación
 
@@ -176,8 +179,31 @@ long_vac = pos_vacio[3]-pos_vacio[1]
 long_diel = pos_diel[3]-pos_diel[1]
 print(f"La longitud de onda en el vacío es L={long_vac:.2f}")
 print(f"La longitud de onda en el dieléctrico es L={long_diel:.2f}")
-# ESTO SALE MAL
-# Y SI MEJOR USAMOS LAMBDA=v*T Y YA ESTÁ???
+
+# Nos disponemos a mostrar tanto la longitud de onda
+# como el periodo en gráficas. La longitud de onda ya puede observarse
+# en la simulación. Para el periodo, fijemos una posición algo posterior a
+# la fuente y otra algo posterior a la interfaz.
+onda_periodo_vac = F[2,:]
+onda_periodo_diel = F[i_int+2,:]
+
+# Configuración de la figura y los ejes
+fig, ax = plt.subplots(figsize=(10, 5))
+line, = ax.plot(t, onda_periodo_vac, 'b-', lw=2, label='Solución Numérica')
+ax.set_ylim(-1.5, 1.5),
+ax.set_xlabel('Tiempo t [s]'), ax.set_ylabel('Amplitud F(t)')
+ax.set_title('Propagación de Onda en el vacío (z fijo)')
+ax.grid(True, linestyle='--', alpha=0.6)
+ax.legend(loc='lower left')
+
+# Configuración de la figura y los ejes
+fig, ax = plt.subplots(figsize=(10, 5))
+line, = ax.plot(t, onda_periodo_vac, 'b-', lw=2, label='Solución Numérica')
+ax.set_ylim(-1.5, 1.5),
+ax.set_xlabel('Tiempo t [s]'), ax.set_ylabel('Amplitud F(t)')
+ax.set_title('Propagación de Onda en el dieléctrico (z fijo, $\ \epsilon_r $=4)')
+ax.grid(True, linestyle='--', alpha=0.6)
+ax.legend(loc='lower left')
 
 # --- Visualización de la Animación ---
 from matplotlib.animation import FuncAnimation
