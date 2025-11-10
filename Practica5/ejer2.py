@@ -47,7 +47,6 @@ w_inc = 2*pi/T_periodo
 k = w_inc/v_array[0]
 loon = 2*pi/k
 
-
 # --- Inicialización ---
 F = np.zeros([Nz + 1, Nt + 1])  # F es Psi (función de onda)
 F0 = 1  # Amplitud de la onda de excitación
