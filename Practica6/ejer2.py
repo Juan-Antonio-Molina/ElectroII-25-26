@@ -130,6 +130,7 @@ err_rel_r = np.abs(r_exp - r_teo)/r_teo
 print(f"El factor de reflexion experimental es r={r_exp}")
 print(f"El factor de reflexion teorico es r={r_teo}")
 print(f"El error relativo es de err={err_rel_r}")
+print("")
 
 
 # Ejercicio 2e)
@@ -145,7 +146,8 @@ print(f"El error relativo es de err={err_rel_t}")
 # Ejercicio 2d)
 R_exp = r_exp**2
 T_exp =  n[-1]/n[0]*t_exp**2
-print(f"La suma de los coeficientes R + T={R_exp + T_exp}")
+print("")
+print(f"La suma de los coeficientes R + T ={R_exp + T_exp}")
 
 
 #Ejer 3
@@ -154,6 +156,21 @@ Nder = int(3*i_int/2)
 
 S_izq = S[Nizq, :190]
 S_der = S[Nder, :190]
+
+# Analisis de calidad
+S_tra = np.max(np.abs(S[j_landa2,:160]))
+S_ref = np.max(np.abs(S[j_landa, t_interfaz[0]:160]))
+S_tteo = T_exp*A
+S_rteo = R_exp*A
+err_Sr = np.abs(S_rteo - S_ref)/S_rteo
+err_St = np.abs(S_tteo - S_tra)/S_tteo
+print("------------------------Ejercicio 3------------------------")
+print(f"La amplitud de S_tra experimental es {S_tra}")
+print(f"La amplitud de S_tra teorica es {S_tteo}")
+print(f"El error relativo de S_tra es e ={err_St}")
+print(f"La amplitud de S_ref experimental es {S_ref}")
+print(f"La amplitud de S_ref teorica es {S_rteo}")
+print(f"El error relativo de S_ref es e ={err_Sr}")
 
 # Configuración de la figura y los ejes
 fig, ax = plt.subplots(figsize=(10, 5))
