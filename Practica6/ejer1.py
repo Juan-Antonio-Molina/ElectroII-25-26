@@ -69,8 +69,8 @@ for j in range(Nt):
     lineS.set_ydata(S[:, j + 1])
     plt.pause(0.003)
 
-E_borde = E[-1, :]
-B_borde = B[-1, :]
+E_borde = E[-3, :]
+B_borde = B[-3, :]
 # Configuración de la figura y los ejes
 fig, ax = plt.subplots(figsize=(10, 5))
 line, = ax.plot(tiempos, E_borde, 'b-', lw=2, label='Solución Numérica')

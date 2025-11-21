@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 from mpl_toolkits.mplot3d import Axes3D
+from scipy import stats
 
 
 def Botella(x, y, z):
@@ -73,14 +74,21 @@ k_perp = np.zeros_like(k_para)
 R_1 = np.zeros_like(k_para)
 R_2 = np.zeros_like(k_para)
 
+# Campo magnético
+
+lista_modB = np.zeros_like(k_para)
+inverse_B = np.zeros_like(k_para)
+
 # Vemos el paso con el ángulo
-phi = np.arctan(sol[:, 1] / sol[:, 0])
-paso = [0]
+#phi = np.arctan(sol[:, 1] / sol[:, 0])
+#paso = [0]
 tol_phi = 1e-2
 
 for it in range(len(v)):
     B = Botella(r[it, 0], r[it, 1], r[it, 2])
     mod_B = np.sqrt(np.dot(B, B))
+    lista_modB[it] = mod_B
+    inverse_B[it] = 1 / mod_B
     mod_v = np.sqrt(np.dot(v[it, :], v[it, :]))
     u_para = B / mod_B
     v_para = np.dot(v[it, :], u_para) * u_para
@@ -97,7 +105,44 @@ for it in range(len(v)):
     R_1[it] = mod_v * mod_v / mod_a_norm
     R_2[it] = m * mod_v_perp / (q * mod_B)
 
-    if np.abs(phi[it] - phi[0]) < tol_phi:
-        paso.append(it)
+    #if np.abs(phi[it] - phi[0]) < tol_phi:
+        #paso.append(it)
+
+
+# Relación entre la intensidad de B y el radio de giro:
+
+res = stats.linregress(inverse_B, R_1) # Ajuste lineal
+print(f"Pendiente = {res.slope:.3f} err: {res.stderr:.3f}")
+print(f"Interseccion = {res.intercept:.3f} err: {res.
+      intercept_stderr:.3f}")
+print(f"Coef. correlación Pearson r = {res.rvalue:.3f}")
+print(f"R^2 (calidad ajuste) = {res.rvalue**2:.3f}")
+
+# Dibujar los puntos y el ajuste en un nuevo subplot
+y_ajuste = res.slope * inverse_B + res.intercept
+fig_ajuste, ax_ajuste = plt.subplots(figsize=(8, 6))
+ax_ajuste.scatter(inverse_B, R_1, label='Puntos de datos')
+ax_ajuste.plot(inverse_B, y_ajuste, color='red', label='Ajuste Lineal')
+
+ax_ajuste.set_xlabel('1/B')
+ax_ajuste.set_ylabel('R_g')
+ax_ajuste.legend()
+ax_ajuste.set_title('Radio de giro respecto 1/B')
+ax_ajuste.legend()
+plt.show()
+
+# Ahora vamos a analizar el fenómeno de reflexión magnética.
+# Para ello, tomaremos la componente z (paralela al eje de rotación) de la
+# velocidad de nuestra partícula y veremos cuándo cambia de signo:
+v_z = v[:,2]
+fig_refl, ax_refl = plt.subplots(figsize=(8, 6))
+ax_refl.plot(t, v_z, color='red', label='Velocidad en la dirección z')
+
+ax_refl.set_xlabel('t')
+ax_refl.set_ylabel('v_z')
+ax_refl.legend()
+ax_refl.set_title('Reflexión magnética')
+ax_refl.legend()
+plt.show()
 
 
