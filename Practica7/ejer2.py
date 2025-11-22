@@ -73,16 +73,12 @@ k_para = np.zeros(len(v))
 k_perp = np.zeros_like(k_para)
 R_1 = np.zeros_like(k_para)
 R_2 = np.zeros_like(k_para)
+u_1 = np.zeros_like(k_para)
 
 # Campo magnético
 
 lista_modB = np.zeros_like(k_para)
 inverse_B = np.zeros_like(k_para)
-
-# Vemos el paso con el ángulo
-#phi = np.arctan(sol[:, 1] / sol[:, 0])
-#paso = [0]
-tol_phi = 1e-2
 
 for it in range(len(v)):
     B = Botella(r[it, 0], r[it, 1], r[it, 2])
@@ -104,9 +100,58 @@ for it in range(len(v)):
     mod_a_norm = np.sqrt(np.dot(a_norm, a_norm))
     R_1[it] = mod_v * mod_v / mod_a_norm
     R_2[it] = m * mod_v_perp / (q * mod_B)
+    u_1[it] = k_perp[it] / mod_B
 
     #if np.abs(phi[it] - phi[0]) < tol_phi:
         #paso.append(it)
+
+#Análisis del error
+err_Rg = np.max(np.abs(R_1 - R_1[0]))
+err_kpara = np.max(np.abs(k_para - k_para[0]))
+err_kperp = np.max(np.abs(k_perp - k_perp[0]))
+err_u = np.max(np.abs(u_1 - u_1[0]))
+print(f"La máxima desviación encontrada para Rg es {err_Rg}, siendo la inicial Rg = {R_1[0]}")
+print(f"La máxima desviación encontrada para K perpendicular es {err_kperp}, siendo la inicial K_perp = {k_perp[0]}")
+print(f"La máxima desviación encontrada para K paralela es {err_kpara}, siendo la inicial K_para = {k_para[0]}")
+print(f"La máxima desviación encontrada para u es {err_u}, siendo la inicial u = {u_1[0]}")
+
+
+# Vemos el paso con la componente x de la posición,
+# pues esta es inicialmente nula.
+paso = []
+tol_x = 3e-2
+pos_x = r[:,0]
+
+# Voy a escribir los índices para que al hacer debug
+# pueda comprobar que son vueltas distintas y que no
+# esté cogiendo puntos cercanos:
+indices = []
+# Así también podemos ir ajustando la tolerancia
+
+for jt in range(len(pos_x)):
+    if np.abs(pos_x[jt]) < tol_x:
+        paso.append(jt)
+        indices.append(jt)
+
+# Guardamos las posiciones z correspondientes a cada
+# vez que se anula la componente x:
+for it in range(len(paso)):
+    paso[it] = r[it,2]
+
+pasos = []
+for it in range(len(paso)-1):
+    pasos.append(paso[it+1]-paso[it])
+
+fig_paso, ax_paso = plt.subplots(figsize=(8, 6))
+ax_paso.plot(pasos, color='purple', label='Pasos')
+
+ax_paso.set_xlabel('Número de vueltas')
+ax_paso.set_ylabel('Paso [uds]')
+ax_paso.legend()
+ax_paso.set_title('Pasos a lo largo de la trayectoria')
+ax_paso.legend()
+plt.show()
+
 
 
 # Relación entre la intensidad de B y el radio de giro:
@@ -124,10 +169,10 @@ fig_ajuste, ax_ajuste = plt.subplots(figsize=(8, 6))
 ax_ajuste.scatter(inverse_B, R_1, label='Puntos de datos')
 ax_ajuste.plot(inverse_B, y_ajuste, color='red', label='Ajuste Lineal')
 
-ax_ajuste.set_xlabel('1/B')
-ax_ajuste.set_ylabel('R_g')
+ax_ajuste.set_xlabel(r'$1/B$ [uds]')
+ax_ajuste.set_ylabel(r'$R_g$ [uds]')
 ax_ajuste.legend()
-ax_ajuste.set_title('Radio de giro respecto 1/B')
+ax_ajuste.set_title(r'Radio de giro respecto $1/B$')
 ax_ajuste.legend()
 plt.show()
 
@@ -138,10 +183,10 @@ v_z = v[:,2]
 fig_refl, ax_refl = plt.subplots(figsize=(8, 6))
 ax_refl.plot(t, v_z, color='red', label='Velocidad en la dirección z')
 
-ax_refl.set_xlabel('t')
-ax_refl.set_ylabel('v_z')
+ax_refl.set_xlabel(r't [uds]')
+ax_refl.set_ylabel(r'$v_z$ [uds]')
 ax_refl.legend()
-ax_refl.set_title('Reflexión magnética')
+ax_refl.set_title('Fenómeno de reflexión magnética')
 ax_refl.legend()
 plt.show()
 
