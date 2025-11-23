@@ -94,10 +94,11 @@ for it in range(len(v)):
     k_para[it] = 0.5 * m * np.dot(v_para, v_para)
     k_perp[it] = 0.5 * m * np.dot(v_perp, v_perp)
 
-    u_tang = v[it, :] / mod_v
-    a_tang = np.dot(a[it, :], u_tang) * u_tang
-    a_norm = a[it, :] - a_tang
-    mod_a_norm = np.sqrt(np.dot(a_norm, a_norm))
+    u_tang = v[it, :] / mod_v # Vectores de velocidad tangentes unitarios
+    a_tang = np.dot(a[it, :], u_tang) * u_tang # Proyeccion aceleracion en v tangente
+    a_norm = a[it, :] - a_tang # Proyeccion aceleracion en v perpendicular
+    mod_a_norm = np.sqrt(np.dot(a_norm, a_norm)) # Modulo de la aceleracion normal
+
     R_1[it] = mod_v * mod_v / mod_a_norm
     R_2[it] = m * mod_v_perp / (q * mod_B)
     u_1[it] = k_perp[it] / mod_B
