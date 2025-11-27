@@ -106,6 +106,30 @@ for it in range(len(v)):
     #if np.abs(phi[it] - phi[0]) < tol_phi:
         #paso.append(it)
 
+# Vamos a observar la variación del módulo del
+# campo magnético a lo largo de la trayectoria:
+fig_campo, ax_b = plt.subplots(figsize=(8, 6))
+ax_b.plot(r[:,2],lista_modB, color='orange', label='Módulo B')
+
+ax_b.set_xlabel('Posición z [uds]')
+ax_b.set_ylabel('Campo Magnético B [uds]')
+ax_b.legend()
+ax_b.set_title('Variación del campo magnético')
+ax_b.legend()
+plt.show()
+
+# Hacemos lo análogo para el radio de giro:
+fig_radio, ax_r1 = plt.subplots(figsize=(8, 6))
+ax_r1.plot(r[:,2],R_1, color='pink', label='Radio de giro')
+
+ax_r1.set_xlabel('Posición z [uds]')
+ax_r1.set_ylabel('Radio de giro [uds]')
+ax_r1.legend()
+ax_r1.set_title('Variación del radio de giro')
+ax_r1.legend()
+plt.show()
+
+
 #Análisis del error
 err_Rg = np.max(np.abs(R_1 - R_1[0]))
 err_kpara = np.max(np.abs(k_para - k_para[0]))
@@ -115,6 +139,68 @@ print(f"La máxima desviación encontrada para Rg es {err_Rg}, siendo la inicial
 print(f"La máxima desviación encontrada para K perpendicular es {err_kperp}, siendo la inicial K_perp = {k_perp[0]}")
 print(f"La máxima desviación encontrada para K paralela es {err_kpara}, siendo la inicial K_para = {k_para[0]}")
 print(f"La máxima desviación encontrada para u es {err_u}, siendo la inicial u = {u_1[0]}")
+
+# Para comprobar la conservación de estas magnitudes también podemos,
+# simplemente, graficarlas a lo largo de la trayectoria.
+# En concreto, las graficaremos frente a la componente z
+# de la posición de la partícula:
+
+# RADIO DE GIRO:
+fig_rg, ax_rg = plt.subplots(figsize=(8, 6))
+ax_rg.plot(r[:,2],R_1, color='green', label='Radio de giro')
+
+ax_rg.set_xlabel('Posición z [uds]')
+ax_rg.set_ylabel('Radio de giro [uds]')
+ax_rg.legend()
+ax_rg.set_title('Conservación del radio de giro')
+ax_rg.legend()
+plt.show()
+
+# K PARALELA
+fig_kpa, ax_kpa = plt.subplots(figsize=(8, 6))
+ax_kpa.plot(r[:,2],k_para, color='green', label='K paralela')
+
+ax_kpa.set_xlabel('Posición z [uds]')
+ax_kpa.set_ylabel(r'$K_{\parallel}$ [uds]')
+ax_kpa.legend()
+ax_kpa.set_title('Conservación de la energía cinética paralela')
+ax_kpa.legend()
+plt.show()
+
+# K PErPENDICULAR
+fig_kpe, ax_kpe = plt.subplots(figsize=(8, 6))
+ax_kpe.plot(r[:,2],k_perp, color='green', label='K perpendicular')
+
+ax_kpe.set_xlabel('Posición z [uds]')
+ax_kpe.set_ylabel(r'$K_{\perp}$ [uds]')
+ax_kpe.legend()
+ax_kpe.set_title('Conservación de la energía cinética perpendicular')
+ax_kpe.legend()
+plt.show()
+
+# MOMENTO MAGNÉTICO
+fig_mu, ax_mu = plt.subplots(figsize=(8, 6))
+ax_mu.plot(r[:,2],u_1, color='green', label='Momento magnético')
+
+ax_mu.set_xlabel('Posición z [uds]')
+ax_mu.set_ylabel(r'$\mu$ [uds]')
+ax_mu.legend()
+ax_mu.set_title('Conservación del momento magnético')
+ax_mu.set_ylim(u_1[0]-0.1, u_1[0]+0.1)
+ax_mu.legend()
+plt.show()
+
+# K TOTAL
+fig_k, ax_k = plt.subplots(figsize=(8, 6))
+ax_k.plot(r[:,2],k_perp+k_para, color='green', label='K total')
+
+ax_k.set_xlabel('Posición z [uds]')
+ax_k.set_ylabel(r'$K_{total}$ [uds]')
+ax_k.legend()
+ax_k.set_title('Conservación de la energía cinética (total)')
+ax_k.set_ylim(k_perp[0]+k_para[0]-0.1, k_perp[0]+k_para[0]+0.1)
+ax_k.legend()
+plt.show()
 
 
 # Vemos el paso con la componente x de la posición,
@@ -129,10 +215,10 @@ pos_x = r[:,0]
 indices = []
 # Así también podemos ir ajustando la tolerancia
 
-for jt in range(len(pos_x)):
-    if np.abs(pos_x[jt]) < tol_x:
-        paso.append(jt)
-        indices.append(jt)
+for jt in range(len(pos_x)-1):
+    if np.abs(pos_x[jt+1]-pos_x[0]) < tol_x:
+        paso.append(jt+1)
+        indices.append(jt+1)
 
 # Guardamos las posiciones z correspondientes a cada
 # vez que se anula la componente x:
@@ -153,7 +239,38 @@ ax_paso.set_title('Pasos a lo largo de la trayectoria')
 ax_paso.legend()
 plt.show()
 
+# También podríamos haber visto cuándo la componente x
+# de la posición cambia de signo
+paso_new = []
+for it in range(len(v)-1):
+    if r[it,0]*r[it+1,0] < 0:
+        paso_new.append(r[it+1,2])
 
+pasos_new = []
+for it in range(len(paso_new)-1):
+    pasos_new.append(np.abs(paso_new[it+1]-paso_new[it]))
+
+fig_paso, ax_paso = plt.subplots(figsize=(8, 6))
+ax_paso.plot(pasos_new, color='purple', label='Pasos')
+
+ax_paso.set_xlabel('Número de vueltas')
+ax_paso.set_ylabel('Paso [uds]')
+ax_paso.legend()
+ax_paso.set_title('Pasos a lo largo de la trayectoria')
+ax_paso.legend()
+plt.show()
+
+# Para observar el paso también podemos, simplemente,
+# graficar la posición x y la z a lo largo de la trayectoria:
+fig_pa, ax_pa = plt.subplots(figsize=(8, 6))
+ax_pa.plot(r[:,2],r[:,0], color='green', label='Componente x')
+
+ax_pa.set_xlabel('Posición z [uds]')
+ax_pa.set_ylabel('Posición x [uds]')
+ax_pa.legend()
+ax_pa.set_title('Variación del paso')
+ax_pa.legend()
+plt.show()
 
 # Relación entre la intensidad de B y el radio de giro:
 
@@ -182,7 +299,7 @@ plt.show()
 # velocidad de nuestra partícula y veremos cuándo cambia de signo:
 v_z = v[:,2]
 fig_refl, ax_refl = plt.subplots(figsize=(8, 6))
-ax_refl.plot(t, v_z, color='red', label='Velocidad en la dirección z')
+ax_refl.plot(t, v_z, color='brown', label='Velocidad en la dirección z')
 
 ax_refl.set_xlabel(r't [uds]')
 ax_refl.set_ylabel(r'$v_z$ [uds]')
