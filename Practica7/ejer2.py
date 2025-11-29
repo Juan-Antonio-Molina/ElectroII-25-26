@@ -49,8 +49,8 @@ plt.show()
 # Ejercicio 3
 pi = np.pi
 q, m, B0 = 1, 1, 1
-x0, y0, z0 = 0, 1, 0
-vx0, vy0, vz0 = 8, 0, 1
+x0, y0, z0 = 1, 1, 1
+vx0, vy0, vz0 = 8, 2, 0
 T = 2 * pi * m / (q * B0)
 
 u0 = [x0, y0, z0, vx0, vy0, vz0]
@@ -87,6 +87,7 @@ u_1 = np.zeros_like(k_para)
 
 lista_modB = np.zeros_like(k_para)
 inverse_B = np.zeros_like(k_para)
+slope = []
 
 for it in range(len(v)):
     B = Botella(r[it, 0], r[it, 1], r[it, 2])
@@ -111,8 +112,12 @@ for it in range(len(v)):
     R_2[it] = m * mod_v_perp / (q * mod_B)
     u_1[it] = k_perp[it] / mod_B
 
+    slope.append(m*mod_v_perp/q)
+
     #if np.abs(phi[it] - phi[0]) < tol_phi:
         #paso.append(it)
+
+
 
 # Hacemos lo análogo para el radio de giro:
 fig_radio, ax_r1 = plt.subplots(figsize=(8, 6))
