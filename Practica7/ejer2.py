@@ -242,6 +242,30 @@ plt.show()
 
 # Vemos el paso con la componente x de la posición,
 # pues esta es inicialmente nula.
+
+def encontrar_tiempos_de_cruce(t, x, y):
+    # Identifica los índices i donde el signo de y[i] cambia a y[i+1]
+    # (El producto y[i] * y[i+1] será negativo si hay cambio de signo)
+    # y los restringe al semiplano x > 0.
+    indices_cruce = np.where((y[:-1] * y[1:] < 0) & (x[:-1] > 0))[0]
+    tiempos_cruce = []
+    for i in indices_cruce:
+        tiempos_cruce.append(i)
+    return tiempos_cruce
+
+T_cruce = encontrar_tiempos_de_cruce(t, r[:,0], r[:,1])
+pos_z = r[:,2]
+alturas = []
+for i in T_cruce:
+    alturas.append(pos_z[i])
+diferencias_alturas= np.diff(alturas)
+pasos = np.abs(diferencias_alturas)
+
+print(f"Pasos entre vueltas (P_n): {pasos}")
+print(f"Desviación Estándar de los Pasos (sigma_P): {np.std(pasos)}")
+
+
+
 paso = []
 tol_x = 3e-2
 pos_x = r[:,0]
@@ -275,6 +299,7 @@ ax_paso.legend()
 ax_paso.set_title('Pasos a lo largo de la trayectoria')
 ax_paso.legend()
 plt.show()
+
 
 # También podríamos haber visto cuándo la componente x
 # de la posición cambia de signo
