@@ -49,8 +49,8 @@ plt.show()
 # Ejercicio 3
 pi = np.pi
 q, m, B0 = 1, 1, 1
-x0, y0, z0 = 1, 1, 1
-vx0, vy0, vz0 = 8, 2, 0
+x0, y0, z0 = 0, 1, 0
+vx0, vy0, vz0 = 8, 0, 1
 T = 2 * pi * m / (q * B0)
 
 u0 = [x0, y0, z0, vx0, vy0, vz0]
@@ -114,8 +114,6 @@ for it in range(len(v)):
 
     slope.append(m*mod_v_perp/q)
 
-    #if np.abs(phi[it] - phi[0]) < tol_phi:
-        #paso.append(it)
 
 
 
@@ -240,102 +238,32 @@ ax_k.legend()
 plt.show()
 
 
-# Vemos el paso con la componente x de la posición,
-# pues esta es inicialmente nula.
 
-def encontrar_tiempos_de_cruce(t, x, y):
-    # Identifica los índices i donde el signo de y[i] cambia a y[i+1]
-    # (El producto y[i] * y[i+1] será negativo si hay cambio de signo)
-    # y los restringe al semiplano x > 0.
-    indices_cruce = np.where((y[:-1] * y[1:] < 0) & (x[:-1] > 0))[0]
-    tiempos_cruce = []
-    for i in indices_cruce:
-        tiempos_cruce.append(i)
-    return tiempos_cruce
+# Para ver el paso frente al numero de vueltas
+# vemos cuando la componente x de la posición cambia de signo
+# Para ver el paso frente al numero de vueltas
+# vemos cuando la componente y de la posición cambia de signo
+def encontrar_tiempos_de_cruce(x, y):
+    indices_cruce = np.where((y[:-1] * y[1:] < 0) & (x[:-1] > x0))[0]
+    return indices_cruce
 
-T_cruce = encontrar_tiempos_de_cruce(t, r[:,0], r[:,1])
-pos_z = r[:,2]
+T_cruce = encontrar_tiempos_de_cruce(r[:,0], r[:,1])
 alturas = []
 for i in T_cruce:
-    alturas.append(pos_z[i])
-diferencias_alturas= np.diff(alturas)
-pasos = np.abs(diferencias_alturas)
-
-print(f"Pasos entre vueltas (P_n): {pasos}")
-print(f"Desviación Estándar de los Pasos (sigma_P): {np.std(pasos)}")
-
-
-
-paso = []
-tol_x = 3e-2
-pos_x = r[:,0]
-
-# Voy a escribir los índices para que al hacer debug
-# pueda comprobar que son vueltas distintas y que no
-# esté cogiendo puntos cercanos:
-indices = []
-# Así también podemos ir ajustando la tolerancia
-
-for jt in range(len(pos_x)-1):
-    if np.abs(pos_x[jt+1]-pos_x[0]) < tol_x:
-        paso.append(jt+1)
-        indices.append(jt+1)
-
-# Guardamos las posiciones z correspondientes a cada
-# vez que se anula la componente x:
-for it in range(len(paso)):
-    paso[it] = r[it,2]
-
-pasos = []
-for it in range(len(paso)-1):
-    pasos.append(paso[it+1]-paso[it])
+    alturas.append(r[:,2][i])
+pasos= np.diff(np.abs(alturas))
+print(f"Pasos calculados: {pasos}")
 
 fig_paso, ax_paso = plt.subplots(figsize=(8, 6))
-ax_paso.plot(pasos, color='purple', label='Pasos')
-
+ax_paso.scatter(np.arange(1, len(pasos)+1),pasos, color='purple', label='Pasos')
 ax_paso.set_xlabel('Número de vueltas')
 ax_paso.set_ylabel('Paso [m]')
 ax_paso.legend()
 ax_paso.set_title('Pasos a lo largo de la trayectoria')
 ax_paso.legend()
-plt.show()
-
-
-# También podríamos haber visto cuándo la componente x
-# de la posición cambia de signo
-paso_new = []
-for it in range(len(v)-1):
-    if r[it,0]*r[it+1,0] < 0:
-        paso_new.append(r[it+1,2])
-
-pasos_new = []
-for it in range(len(paso_new)-1):
-    pasos_new.append(np.abs(paso_new[it+1]-paso_new[it]))
-
-fig_paso, ax_paso = plt.subplots(figsize=(8, 6))
-ax_paso.plot(pasos_new, color='purple', label='Pasos')
-
-ax_paso.set_xlabel('Número de vueltas')
-ax_paso.set_ylabel('Paso [m]')
-ax_paso.legend()
-ax_paso.set_title('Pasos a lo largo de la trayectoria')
-ax_paso.legend()
-plt.show()
-
-# Para observar el paso también podemos, simplemente,
-# graficar la posición x y la z a lo largo de la trayectoria:
-fig_pa, ax_pa = plt.subplots(figsize=(8, 6))
-ax_pa.plot(r[:,2],r[:,0], color='green', label='Componente x')
-
-ax_pa.set_xlabel('Posición z [m]')
-ax_pa.set_ylabel('Posición x [m]')
-ax_pa.legend()
-ax_pa.set_title('Variación del paso')
-ax_pa.legend()
 plt.show()
 
 # Relación entre la intensidad de B y el radio de giro:
-
 res = stats.linregress(inverse_B, R_1) # Ajuste lineal
 print(f"Pendiente = {res.slope:.3f} err: {res.stderr:.3f}")
 print(f"Interseccion = {res.intercept:.3f} err: {res.
