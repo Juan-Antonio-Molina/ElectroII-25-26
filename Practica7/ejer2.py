@@ -49,9 +49,11 @@ plt.show()
 # Ejercicio 3
 pi = np.pi
 q, m, B0 = 1, 1, 1
-x0, y0, z0 = 0, 1, 0
-vx0, vy0, vz0 = 8, 0, 1
+x0, y0, z0 = 1, 1, 1
+vx0, vy0, vz0 = 8, 2, 0
 T = 2 * pi * m / (q * B0)
+
+T=0.3*T
 
 u0 = [x0, y0, z0, vx0, vy0, vz0]
 dt = 0.01;
@@ -261,6 +263,19 @@ ax_paso.set_ylabel('Paso [m]')
 ax_paso.legend()
 ax_paso.set_title('Pasos a lo largo de la trayectoria')
 ax_paso.legend()
+plt.show()
+
+
+# Para observar el paso también podemos, simplemente,
+# graficar la posición x y la z a lo largo de la trayectoria:
+fig_pa, ax_pa = plt.subplots(figsize=(8, 6))
+ax_pa.plot(r[:,2],r[:,0], color='green', label='Componente x')
+
+ax_pa.set_xlabel('Posición z [m]')
+ax_pa.set_ylabel('Posición x [m]')
+ax_pa.legend()
+ax_pa.set_title('Variación del paso')
+ax_pa.legend()
 plt.show()
 
 # Relación entre la intensidad de B y el radio de giro:
